@@ -5,7 +5,7 @@ import { z } from 'zod';
 const FormSchema = z.object({
   id: z.string(),
   customerId: z.string(),
-  amount: z.number(),
+  amount: z.coerce.number(),
   status: z.enum(['pending', 'paid']),
   date: z.string(),
 });
@@ -13,6 +13,7 @@ const FormSchema = z.object({
 const CreateInvoice = FormSchema.omit({id: true, date: true});
 
 export async function createInvoice(formData: FormData) {
+  
   const {customerId, amount, status} = CreateInvoice.parse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
@@ -21,5 +22,6 @@ export async function createInvoice(formData: FormData) {
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split('T')[0];
   // Test it out:
-  console.log(CreateInvoice);
+
+  console.log({customerId, amount, status, date});
 }
